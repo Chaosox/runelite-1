@@ -125,6 +125,7 @@ import net.runelite.rs.api.RSFriendsList;
 import net.runelite.rs.api.RSIgnoreList;
 import net.runelite.rs.api.RSIndexedSprite;
 import net.runelite.rs.api.RSItemContainer;
+import net.runelite.rs.api.RSMouseHandler;
 import net.runelite.rs.api.RSNPC;
 import net.runelite.rs.api.RSNodeDeque;
 import net.runelite.rs.api.RSNodeHashTable;

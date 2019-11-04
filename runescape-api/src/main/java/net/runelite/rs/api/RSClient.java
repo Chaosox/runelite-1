@@ -39,6 +39,13 @@ import net.runelite.mapping.Import;
 
 public interface RSClient extends RSGameShell, Client
 {
+
+	@Import("logoutTimer")
+	int getLogoutTime();
+
+	@Import("logoutTimer")
+	void setLogoutTimer(int time);
+
 	@Import("cameraX")
 	@Override
 	int getCameraX();
@@ -596,6 +603,10 @@ public interface RSClient extends RSGameShell, Client
 	@Override
 	int getMouseIdleTicks();
 
+	@Import("MouseHandler_idleCycles")
+	@Override
+	void setMouseIdleTicks(int idleTicks);
+
 	@Import("MouseHandler_lastPressedTimeMillis")
 	@Override
 	long getMouseLastPressedMillis();
@@ -603,6 +614,10 @@ public interface RSClient extends RSGameShell, Client
 	@Import("KeyHandler_idleCycles")
 	@Override
 	int getKeyboardIdleTicks();
+
+	@Import("KeyHandler_idleCycles")
+	@Override
+	void setKeyIdleTicks(int idleTicks);
 
 	@Import("KeyHandler_pressedKeys")
 	@Override

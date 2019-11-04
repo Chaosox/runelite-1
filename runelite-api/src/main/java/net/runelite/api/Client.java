@@ -56,6 +56,10 @@ public interface Client extends GameShell
 
 	void setDrawCallbacks(DrawCallbacks drawCallbacks);
 
+	int getLogoutTime();
+
+	void setLogoutTimer(int time);
+
 	/**
 	 * Retrieve a global logger for the client.
 	 * This is most useful for mixins which can't have their own.
@@ -1050,6 +1054,8 @@ public interface Client extends GameShell
 	 */
 	int getMouseIdleTicks();
 
+	void setMouseIdleTicks(int idleTicks);
+
 	/**
 	 * Gets the time at which the last mouse press occurred in milliseconds since
 	 * the UNIX epoch.
@@ -1063,6 +1069,8 @@ public interface Client extends GameShell
 	 * @see Constants#CLIENT_TICK_LENGTH
 	 */
 	int getKeyboardIdleTicks();
+
+	void setKeyIdleTicks(int idleTicks);
 
 	/**
 	 * Returns an array of booleans relating to keys pressed.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017, Adam <Adam@sigterm.info>
+ * Copyright (c) 2017-2019, Adam <Adam@sigterm.info>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,53 +22,19 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.injector;
+package net.runelite.api.events;
 
-import java.io.File;
-import java.io.IOException;
-import net.runelite.asm.ClassGroup;
-import net.runelite.deob.DeobTestProperties;
-import net.runelite.deob.TemporyFolderLocation;
-import net.runelite.deob.util.JarUtil;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import lombok.Value;
+import net.runelite.api.Skill;
 
-public class InjectTest
+/**
+ * An event where the experience, level, or boosted level of a {@link Skill} has been modified.
+ */
+@Value
+public class StatChanged implements Event
 {
-	@Rule
-	public DeobTestProperties properties = new DeobTestProperties();
-
-	@Rule
-	public TemporaryFolder folder = TemporyFolderLocation.getTemporaryFolder();
-
-	private ClassGroup deob, vanilla;
-
-	@Before
-	public void before() throws IOException
-	{
-		deob = JarUtil.loadJar(new File(properties.getRsClient()));
-		vanilla = JarUtil.loadJar(new File(properties.getVanillaClient()));
-	}
-
-	@After
-	public void after() throws IOException
-	{
-		JarUtil.saveJar(vanilla, folder.newFile());
-	}
-
-	@Test
-	@Ignore
-	public void testRun() throws InjectionException
-	{
-		Inject instance = new Inject(deob, vanilla);
-		instance.run();
-
-		InjectorValidator iv = new InjectorValidator(vanilla);
-		iv.validate();
-	}
-
+	private final Skill skill;
+	private final int xp;
+	private final int level;
+	private final int boostedLevel;
 }

@@ -39,7 +39,7 @@ public class NeverLogoutPlugin extends Plugin
 
 	private void onClientTick(ClientTick event)
 	{
-		log.info("MouseIdle: {}, keyboardIdle: {}, logoutTimer: {}", client.getMouseIdleTicks(),
+		log.debug("MouseIdle: {}, keyboardIdle: {}, logoutTimer: {}", client.getMouseIdleTicks(),
 			client.getKeyboardIdleTicks(), client.getLogoutTime());
 		client.setMouseIdleTicks(0);
 		client.setKeyIdleTicks(0);

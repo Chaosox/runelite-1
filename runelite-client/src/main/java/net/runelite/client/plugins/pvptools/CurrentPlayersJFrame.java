@@ -16,7 +16,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionListener;
 import java.util.List;
-import javax.inject.Singleton;
+import javax.inject.Inject;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,10 +26,10 @@ import javax.swing.JScrollPane;
 import net.runelite.api.Client;
 import net.runelite.client.ui.FontManager;
 
-@Singleton
 class CurrentPlayersJFrame extends JFrame
 {
 
+	@Inject
 	CurrentPlayersJFrame(final Client client, final PvpToolsPlugin pvpToolsPlugin, final List<String> list)
 	{
 		super();

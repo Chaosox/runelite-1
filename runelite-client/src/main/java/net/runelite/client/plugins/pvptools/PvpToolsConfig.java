@@ -9,6 +9,7 @@
 
 package net.runelite.client.plugins.pvptools;
 
+import java.util.EnumSet;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
@@ -51,34 +52,22 @@ public interface PvpToolsConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "hideAttack",
-		name = "Hide attack",
-		description = "Hides the attack option for clanmates, friends, or both",
-		position = 3
+		position = 3,
+		keyName = "hideAttackOptionsMode",
+		name = "Hide Attack Options for",
+		description = "Hides the attack option for the following type(s) of players",
+		enumClass = HideAttackOptionsMode.class
 	)
-	default boolean hideAttack()
+	default EnumSet<HideAttackOptionsMode> hideAttackOptionsMode()
 	{
-		return false;
-	}
-
-	@ConfigItem(
-		keyName = "hideAttackMode",
-		name = "Mode",
-		description = "",
-		position = 4,
-		hidden = true,
-		unhide = "hideAttack"
-	)
-	default AttackMode hideAttackMode()
-	{
-		return AttackMode.FRIENDS;
+		return EnumSet.of(HideAttackOptionsMode.FRIENDS);
 	}
 
 	@ConfigItem(
 		keyName = "hideCast",
 		name = "Hide cast",
 		description = "Hides the cast option for clanmates, friends, or both",
-		position = 5
+		position = 4
 	)
 	default boolean hideCast()
 	{
@@ -89,20 +78,20 @@ public interface PvpToolsConfig extends Config
 		keyName = "hideCastMode",
 		name = "Mode",
 		description = "",
-		position = 6,
+		position = 5,
 		hidden = true,
 		unhide = "hideCast"
 	)
-	default AttackMode hideCastMode()
+	default HideAttackOptionsMode hideCastMode()
 	{
-		return AttackMode.FRIENDS;
+		return HideAttackOptionsMode.FRIENDS;
 	}
 
 	@ConfigItem(
 		keyName = "hideCastIgnored",
 		name = "Ignored spells",
 		description = "Spells that should not be hidden from being cast, separated by a comma",
-		position = 7,
+		position = 6,
 		hidden = true,
 		unhide = "hideCast"
 	)
@@ -118,28 +107,6 @@ public interface PvpToolsConfig extends Config
 		position = 8
 	)
 	default boolean riskCalculatorEnabled()
-	{
-		return true;
-	}
-
-	@ConfigItem(
-		keyName = "missingPlayers",
-		name = "Missing CC Players",
-		description = "Adds a button to the PvP Tools panel that opens a window showing which CC members are not at the current players location",
-		position = 9
-	)
-	default boolean missingPlayersEnabled()
-	{
-		return true;
-	}
-
-	@ConfigItem(
-		keyName = "currentPlayers",
-		name = "Current CC Players",
-		description = "Adds a button to the PvP Tools panel that opens a window showing which CC members currently at the players location",
-		position = 10
-	)
-	default boolean currentPlayersEnabled()
 	{
 		return true;
 	}

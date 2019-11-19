@@ -56,5 +56,17 @@ public enum HeadIcon
 	/**
 	 * Protect from range and mage (ie. used by Kalphite Queen).
 	 */
-	RANGE_MAGE
+	RANGE_MAGE;
+
+	public static HeadIcon getHeadIcon(int i)
+	{
+		if (i == -1)
+		{
+			return null;
+		}
+		else
+		{
+			return HeadIcon.class.getEnumConstants()[i];
+		}
+	}
 }

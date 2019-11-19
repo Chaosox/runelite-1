@@ -61,7 +61,7 @@ public class PlayerCountOverlay extends Overlay
 			TableComponent tableComponent = new TableComponent();
 			TableElement[] firstRowElements = {
 				TableElement.builder().content("Friendly").color(Color.GREEN).build(),
-				TableElement.builder().content(String.valueOf(pvpToolsPlugin.getFriendlyPlayerCount())).build()};
+				TableElement.builder().content(String.valueOf(pvpToolsPlugin.getLocalClanMembers())).build()};
 			TableRow firstRow = TableRow.builder().elements(Arrays.asList(firstRowElements)).build();
 			TableElement[] secondRowElements = {
 				TableElement.builder().content("Enemy").color(Color.RED).build(),

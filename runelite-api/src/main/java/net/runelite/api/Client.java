@@ -30,7 +30,6 @@ import java.math.BigInteger;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import net.runelite.api.coords.LocalPoint;
@@ -1818,8 +1817,9 @@ public interface Client extends GameShell
 
 	/**
 	 * Set spells excluded from above hiding
+	 * @param casts
 	 */
-	void setUnhiddenCasts(Set<String> casts);
+	void setUnhiddenCasts(List<String> casts);
 
 	/**
 	 * Add player to friendlist

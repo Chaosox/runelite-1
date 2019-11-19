@@ -28,12 +28,6 @@ import java.awt.Polygon;
 import java.awt.Shape;
 import java.util.ArrayList;
 import net.runelite.api.HeadIcon;
-import static net.runelite.api.HeadIcon.MAGIC;
-import static net.runelite.api.HeadIcon.MELEE;
-import static net.runelite.api.HeadIcon.RANGED;
-import static net.runelite.api.HeadIcon.REDEMPTION;
-import static net.runelite.api.HeadIcon.RETRIBUTION;
-import static net.runelite.api.HeadIcon.SMITE;
 import net.runelite.api.Model;
 import net.runelite.api.Perspective;
 import net.runelite.api.SkullIcon;
@@ -45,7 +39,9 @@ import static net.runelite.api.SkullIcon.DEAD_MAN_TWO;
 import static net.runelite.api.SkullIcon.SKULL;
 import static net.runelite.api.SkullIcon.SKULL_FIGHT_PIT;
 import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.events.player.PlayerOverheadChanged;
 import net.runelite.api.mixins.Copy;
+import net.runelite.api.mixins.FieldHook;
 import net.runelite.api.mixins.Inject;
 import net.runelite.api.mixins.MethodHook;
 import net.runelite.api.mixins.Mixin;
@@ -64,6 +60,9 @@ public abstract class RSPlayerMixin implements RSPlayer
 
 	@Inject
 	private boolean friended;
+
+	@Inject
+	private int oldPrayer;
 
 	@Inject
 	@Override
@@ -88,50 +87,40 @@ public abstract class RSPlayerMixin implements RSPlayer
 
 	@Inject
 	@Override
-	public HeadIcon getOverheadIcon()
+	public Shape getConvexHull()
 	{
-		switch (getRsOverheadIcon())
+		RSModel model = getModel();
+		if (model == null)
 		{
-			case 0:
-				return MELEE;
-			case 1:
-				return RANGED;
-			case 2:
-				return MAGIC;
-			case 3:
-				return RETRIBUTION;
-			case 4:
-				return SMITE;
-			case 5:
-				return REDEMPTION;
-			default:
-				return null;
+			return null;
 		}
+
+		int tileHeight = Perspective.getTileHeight(client, new LocalPoint(getX(), getY()), client.getPlane());
+
+		return model.getConvexHull(getX(), getY(), getOrientation(), tileHeight);
 	}
 
 	@Inject
-	@Override
-	public SkullIcon getSkullIcon()
+	@FieldHook(value = "headIconPrayer", before = true)
+	void updateOverheadPrayer(int idx)
 	{
-		switch (getRsSkullIcon())
+		int newPrayer = this.getRsOverheadIcon();
+
+		if (this.getRsName() == null)
 		{
-			case 0:
-				return SKULL;
-			case 1:
-				return SKULL_FIGHT_PIT;
-			case 8:
-				return DEAD_MAN_FIVE;
-			case 9:
-				return DEAD_MAN_FOUR;
-			case 10:
-				return DEAD_MAN_THREE;
-			case 11:
-				return DEAD_MAN_TWO;
-			case 12:
-				return DEAD_MAN_ONE;
-			default:
-				return null;
+			return;
 		}
+		if (oldPrayer == newPrayer)
+		{
+			oldPrayer = getRsOverheadIcon();
+			return;
+		}
+		PlayerOverheadChanged playerOverheadChanged = new PlayerOverheadChanged();
+		playerOverheadChanged.setPlayer(this);
+		playerOverheadChanged.setOldPrayer(HeadIcon.getHeadIcon(oldPrayer));
+		playerOverheadChanged.setNewPrayer(HeadIcon.getHeadIcon(newPrayer));
+		client.getCallbacks().post(PlayerOverheadChanged.class, playerOverheadChanged);
+		this.oldPrayer = newPrayer;
 	}
 
 	@Inject
@@ -180,17 +169,34 @@ public abstract class RSPlayerMixin implements RSPlayer
 
 	@Inject
 	@Override
-	public Shape getConvexHull()
+	public HeadIcon getOverheadIcon()
 	{
-		RSModel model = getModel();
-		if (model == null)
+		return HeadIcon.getHeadIcon(getRsOverheadIcon());
+	}
+
+	@Inject
+	@Override
+	public SkullIcon getSkullIcon()
+	{
+		switch (getRsSkullIcon())
 		{
-			return null;
+			case 0:
+				return SKULL;
+			case 1:
+				return SKULL_FIGHT_PIT;
+			case 8:
+				return DEAD_MAN_FIVE;
+			case 9:
+				return DEAD_MAN_FOUR;
+			case 10:
+				return DEAD_MAN_THREE;
+			case 11:
+				return DEAD_MAN_TWO;
+			case 12:
+				return DEAD_MAN_ONE;
+			default:
+				return null;
 		}
-
-		int tileHeight = Perspective.getTileHeight(client, new LocalPoint(getX(), getY()), client.getPlane());
-
-		return model.getConvexHull(getX(), getY(), getOrientation(), tileHeight);
 	}
 
 	@Copy("getModel")
@@ -236,4 +242,5 @@ public abstract class RSPlayerMixin implements RSPlayer
 	{
 		friended = client.getFriendManager().isFriended(getRsName(), false);
 	}
+
 }

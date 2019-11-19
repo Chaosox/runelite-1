@@ -101,12 +101,12 @@ public interface PvpToolsConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "riskCalculator",
-		name = "Risk Calculator",
-		description = "Enables a panel in the PvP Tools Panel that shows the players current risk",
-		position = 8
+		keyName = "cacheClanMembers",
+		name = "Cache Clan Members",
+		description = "Maintains a list of all CC members for 45 seconds after leaving a clan chat",
+		position = 7
 	)
-	default boolean riskCalculatorEnabled()
+	default boolean cacheClanMembers()
 	{
 		return true;
 	}

@@ -29,7 +29,6 @@ import net.runelite.client.ui.FontManager;
 class CurrentPlayersJFrame extends JFrame
 {
 
-	@Inject
 	CurrentPlayersJFrame(final Client client, final PvpToolsPlugin pvpToolsPlugin, final List<String> list)
 	{
 		super();

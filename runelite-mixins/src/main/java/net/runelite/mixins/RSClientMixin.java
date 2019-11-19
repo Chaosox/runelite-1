@@ -273,7 +273,7 @@ public abstract class RSClientMixin implements RSClient
 
 	@Inject
 	@Override
-	public void setUnhiddenCasts(List<String> casts)
+	public void setUnhiddenCasts(Set<String> casts)
 	{
 		unhiddenCasts = casts;
 	}

@@ -12,7 +12,6 @@
 package net.runelite.client.plugins.pvptools;
 
 import com.google.common.base.Splitter;
-import com.google.common.collect.Sets;
 import com.google.inject.Provides;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,8 +21,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -41,7 +42,6 @@ import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.PlayerDespawned;
 import net.runelite.api.events.PlayerSpawned;
 import net.runelite.api.events.player.PlayerOverheadChanged;
-import net.runelite.api.util.Text;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.config.Keybind;
@@ -58,7 +58,6 @@ import net.runelite.client.ui.NavigationButton;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.HotkeyListener;
 import net.runelite.client.util.ImageUtil;
-import org.codehaus.plexus.util.CollectionUtils;
 
 @PluginDescriptor(
 	name = "PvP Tools",
@@ -81,7 +80,7 @@ public class PvpToolsPlugin extends Plugin
 	private boolean countOverHeads;
 	private boolean hideCast;
 	private HideAttackOptionsMode hideCastMode;
-	private List<String> unhiddenCasts;
+	private Set<String> unhiddenCasts;
 	private Keybind renderSelf;
 	private Set<HideAttackOptionsMode> hiddenAttackOptions = EnumSet.noneOf(HideAttackOptionsMode.class);
 	/*
@@ -106,9 +105,7 @@ public class PvpToolsPlugin extends Plugin
 	private ClientToolbar clientToolbar;
 	@Inject
 	private KeyManager keyManager;
-	@Inject
 	private CurrentPlayersJFrame currentPlayersJFrame;
-	@Inject
 	private MissingPlayersJFrame missingPlayersJFrame;
 	final ActionListener currentPlayersActionListener = new ActionListener()
 	{
@@ -229,12 +226,14 @@ public class PvpToolsPlugin extends Plugin
 		{
 			return;
 		}
-		if (event.getOldPrayer() == null || event.getNewPrayer() == null)
+		if (event.getOldPrayer() == null && event.getNewPrayer() == null)
 		{
 			return;
 		}
-		prayerCounts = client.getPlayers().stream().collect(Collectors.groupingBy(Player::getOverheadIcon,
-			Collectors.counting()));
+		prayerCounts = client.getPlayers().stream()
+			.filter(player -> Objects.nonNull(player.getOverheadIcon()))
+			.collect(Collectors.groupingBy(Player::getOverheadIcon,
+				Collectors.counting()));
 	}
 
 	private void onConfigChanged(ConfigChanged configChanged)
@@ -408,7 +407,7 @@ public class PvpToolsPlugin extends Plugin
 		this.hiddenAttackOptions = config.hideAttackOptionsMode();
 		this.hideCast = config.hideCast();
 		this.hideCastMode = config.hideCastMode();
-		this.unhiddenCasts = (List<String>) Splitter.on(",").omitEmptyStrings().trimResults().splitToList(config.hideCastIgnored().toLowerCase());
+		this.unhiddenCasts = new HashSet<>(Splitter.on(",").omitEmptyStrings().trimResults().splitToList(config.hideCastIgnored().toLowerCase()));
 		updateAttackOptions();
 	}
 
